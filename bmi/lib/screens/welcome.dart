@@ -17,7 +17,7 @@ class welcome extends StatelessWidget {
           children: [
             const Center(
               child: Text(
-                "BMiDO",
+                "BodyMetrics",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
@@ -31,17 +31,29 @@ class welcome extends StatelessWidget {
               width: 300,
               height: 300,
             ),
-            Text(
-              "Get Started with Tracking Your Health!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            Text(
-              "Calculate your BMI and stay on top of your wellness journey, effortlessly.",
-              style: TextStyle(color: Color(0xFFC6C3F9)),
+            SizedBox(height: 50,),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                  child: Text(
+                    "Get Started with Tracking Your Health!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15,),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0, left: 8.0, bottom: 8.0),
+                  child: Text(
+                    "Calculate your BMI and stay on top of your wellness journey, effortlessly.",
+                    style: TextStyle(color: Color(0xFFC6C3F9), fontSize: 15),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               width: 350,
@@ -64,7 +76,6 @@ class welcome extends StatelessWidget {
       ),
     );
   }
-
   PageRouteBuilder _createPageRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => home(),
@@ -72,10 +83,8 @@ class welcome extends StatelessWidget {
         const begin = Offset(1.0, 0.0); // Slide in from the right
         const end = Offset.zero;
         const curve = Curves.easeInOut;
-
         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         var offsetAnimation = animation.drive(tween);
-
         return SlideTransition(position: offsetAnimation, child: child);
       },
     );
