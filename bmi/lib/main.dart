@@ -3,7 +3,7 @@ import 'package:bmi/screens/welcome.dart';
 import 'package:flutter/material.dart';
 
 void main(){
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true
       ),
-      home: welcome(),
+      home: const Welcome(),
       initialRoute: "welcome",
       routes:{
-        "welcome" : (context) => welcome(),
-        "home" : (context) => home(),
+        "welcome" : (context) => const Welcome(),
+        "home" : (context) => const Home(),
 
       },
     );

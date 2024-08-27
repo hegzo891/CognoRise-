@@ -1,55 +1,137 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bmi/screens/result.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/counters.dart';
 
-class home extends StatefulWidget {
-  const home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<home> createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<home> {
+class _HomeState extends State<Home> {
   double _currentValue = 150;
+  late int number = 0;
   late int value;
   int _selectedGenderIndex = 0; // 0 for Male, 1 for Female
+
+  // Method to calculate the BMI category
+  String calc(double bmi) {
+    if (bmi < 18.5) {
+      return "UNDERWEIGHT";
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      return "NORMAL";
+    } else if (bmi >= 25 && bmi < 29.9) {
+      return "OVERWEIGHT";
+    } else {
+      return "OBESITY";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     value = _currentValue.toInt();
 
     return Scaffold(
-      backgroundColor: Color(0xFFF4F3FF),
+      backgroundColor: const Color(0xFFF4F3FF),
       body: Padding(
         padding: const EdgeInsets.all(40.0),
         child: Column(
           children: [
-            Text(
+            const Text(
               "BMI CALCULATOR",
               style: TextStyle(fontSize: 20),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
-            // Gender ToggleButtons
-
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Counters(
+                const Counters(
                   title: 'Age',
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Counters(
-                  title: 'Weight (KG)',
-                ),
+                Container(
+                  width: 156,
+                  height: 175,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // Shadow color
+                        spreadRadius: 0.5, // Spread radius
+                        blurRadius: 5, // Blur radius
+                        offset: const Offset(0, 5), // Shadow position
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(13),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        "Weight (KG)", // Access the title using widget.title
+                        style: TextStyle(fontSize: 20, color: Color(0xff081854)),
+                      ),
+                      Text(
+                        "$number", // Display the current number
+                        style: const TextStyle(
+                            fontSize: 57,
+                            color: Color(0xff6C63FF),
+                            fontWeight: FontWeight.w900),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const SizedBox(width: 5,),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  number--;
+                                });
+                              },
+                              icon: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xff081854),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: const Icon(
+                                    Icons.remove,
+                                    color: Colors.white,
+                                  ))),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  number++;
+                                });
+                              },
+                              icon: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xff081854),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ))),
+                          const SizedBox(width: 5,)
+                        ],
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Container(
@@ -61,7 +143,7 @@ class _HomeState extends State<home> {
                     color: Colors.black.withOpacity(0.2), // Shadow color
                     spreadRadius: 0.5, // Spread radius
                     blurRadius: 5, // Blur radius
-                    offset: Offset(0, 5), // Shadow position
+                    offset: const Offset(0, 5), // Shadow position
                   ),
                 ],
                 borderRadius: BorderRadius.circular(13),
@@ -69,26 +151,25 @@ class _HomeState extends State<home> {
               ),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Height (CM)",
                     style: TextStyle(color: Color(0xff081854), fontSize: 20),
                   ),
                   Text(
                     "$value", // Display the current number
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 57,
                         color: Color(0xff6C63FF),
                         fontWeight: FontWeight.w900),
                   ),
                   Slider(
-                    thumbColor: Color(0xff6C63FF),
+                    thumbColor: const Color(0xff6C63FF),
                     value: _currentValue,
                     min: 50,
                     max: 300,
-                    divisions: 50, // Optional: Set divisions if you want steps
                     label: _currentValue.toInt().toString(),
                     onChanged: (double newValue) {
                       setState(() {
@@ -99,10 +180,11 @@ class _HomeState extends State<home> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Container( width: 333,
+            Container(
+              width: 333,
               height: 183,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -110,54 +192,66 @@ class _HomeState extends State<home> {
                     color: Colors.black.withOpacity(0.2), // Shadow color
                     spreadRadius: 0.5, // Spread radius
                     blurRadius: 5, // Blur radius
-                    offset: Offset(0, 5), // Shadow position
+                    offset: const Offset(0, 5), // Shadow position
                   ),
                 ],
                 borderRadius: BorderRadius.circular(13),
                 color: Colors.white,
-              ),child: Column(
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text("Gender",            style: TextStyle(fontSize: 20, color: Color(0xff081854)),
+                  const Text(
+                    "Gender",
+                    style: TextStyle(fontSize: 20, color: Color(0xff081854)),
                   ),
                   ToggleButtons(
-
-                  borderRadius: BorderRadius.circular(10),
-                  selectedColor: Colors.white,
-                  fillColor: Color(0xff6C63FF),
-                  color: Colors.black,
-                  isSelected: [_selectedGenderIndex == 0, _selectedGenderIndex == 1],
-                  onPressed: (index) {
-                    setState(() {
-                      _selectedGenderIndex = index;
-                    });
-                  },
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text("Male"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text("Female"),
-                    ),
-                  ],
-                              ),
+                    borderRadius: BorderRadius.circular(10),
+                    selectedColor: Colors.white,
+                    fillColor: const Color(0xff6C63FF),
+                    color: Colors.black,
+                    isSelected: [_selectedGenderIndex == 0, _selectedGenderIndex == 1],
+                    onPressed: (index) {
+                      setState(() {
+                        _selectedGenderIndex = index;
+                      });
+                    },
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text("Male"),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text("Female"),
+                      ),
+                    ],
+                  ),
                 ],
-              ),),
-           SizedBox(height: 30,),
+              ),
+            ),
+            const SizedBox(height: 30,),
             SizedBox(
               width: 350,
               height: 80,
               child: ElevatedButton(
                 onPressed: () {
+                  double bmi = number / ((value / 100) * (value / 100));
+                  String category = calc(bmi);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Result(bmi: bmi, text: category),
+                    ),
+                  );
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: const Color(0xFF081854),
+                  backgroundColor: const Color(0xff6C63FF), // Text color
+                ),
+                child: const Text(
                   "Calculate BMI",
                   style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF081854), backgroundColor: Color(0xff6C63FF), // Text color
                 ),
               ),
             ),

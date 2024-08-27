@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Counters extends StatefulWidget {
   final String title;
 
-  Counters({super.key, required this.title});
+  const Counters({super.key, required this.title});
 
   @override
   State<Counters> createState() => _CountersState();

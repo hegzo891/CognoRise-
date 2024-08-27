@@ -1,9 +1,8 @@
-import 'package:bmi/screens/home.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bmi/screens/home.dart'; // Ensure this path is correct
 import 'package:flutter/material.dart';
 
-class welcome extends StatelessWidget {
-  const welcome({super.key});
+class Welcome extends StatelessWidget { // Capitalized class name
+  const Welcome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +26,15 @@ class welcome extends StatelessWidget {
               ),
             ),
             Image.asset(
-              "lib/assets/img.png",
+              "lib/assets/img.png", // Ensure this path is correct
               width: 300,
               height: 300,
             ),
-            SizedBox(height: 50,),
-            Column(
+            const SizedBox(height: 50),
+            const Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     "Get Started with Tracking Your Health!",
                     style: TextStyle(
@@ -45,9 +44,9 @@ class welcome extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(height: 15),
                 Padding(
-                  padding: const EdgeInsets.only(right: 8.0, left: 8.0, bottom: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                   child: Text(
                     "Calculate your BMI and stay on top of your wellness journey, effortlessly.",
                     style: TextStyle(color: Color(0xFFC6C3F9), fontSize: 15),
@@ -62,12 +61,13 @@ class welcome extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(_createPageRoute());
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: const Color(0xFF081854),
+                  backgroundColor: Colors.white, // Text color
+                ),
+                child: const Text(
                   "Get Started",
                   style: TextStyle(fontSize: 20, color: Color(0xFF081854)),
-                ),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xFF081854), backgroundColor: Colors.white, // Text color
                 ),
               ),
             ),
@@ -76,16 +76,18 @@ class welcome extends StatelessWidget {
       ),
     );
   }
+
   PageRouteBuilder _createPageRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => home(),
+      pageBuilder: (context, animation, secondaryAnimation) => const Home(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0); // Slide in from the right
-        const end = Offset.zero;
+        const begin = 0.0;
+        const end = 1.0;
         const curve = Curves.easeInOut;
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var offsetAnimation = animation.drive(tween);
-        return SlideTransition(position: offsetAnimation, child: child);
+        var tween = Tween(begin: begin, end: end).chain(
+            CurveTween(curve: curve));
+        var opacityAnimation = animation.drive(tween);
+        return FadeTransition(opacity: opacityAnimation, child: child);
       },
     );
   }
