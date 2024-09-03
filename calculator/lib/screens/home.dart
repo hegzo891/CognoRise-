@@ -1,10 +1,8 @@
 import 'package:calculator/providers/themeProvider.dart';
 import 'package:calculator/widgets/buttons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../myColors/colors.dart';
 
 class Home extends StatefulWidget {
@@ -12,14 +10,47 @@ class Home extends StatefulWidget {
 
   @override
   State<Home> createState() => _HomeState();
-
 }
 
 class _HomeState extends State<Home> {
-  String text = " ";
+  String text = "";
+  double size = 90;
+  String text2 = "";
+  String Operations = "";
+  final ScrollController _scrollController = ScrollController();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  void write(symbol) {
+    setState(() {
+      text += symbol;
+
+      int length = text.length;
+
+      if (length > 7) {
+        size = 80;
+      } else if (length > 10) {
+        size = 60;
+      } else if (length > 14) {
+        size = 50;
+      } else {
+        size = 100;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    });
+  }
+
+  void calculate(text) {
+
+  }
 
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    Color colorText = themeProvider.dark ? Colors.white : Colors.black;
+
     return Scaffold(
       body: Container(
         width: MediaQuery.sizeOf(context).width,
@@ -43,6 +74,7 @@ class _HomeState extends State<Home> {
                   Transform.scale(
                     scale: 1.2,
                     child: Switch(
+                      activeColor: Color(0xff4B5EFC),
                       value: themeProvider.dark,
                       onChanged: (_) {
                         themeProvider.toggleTheme();
@@ -54,7 +86,8 @@ class _HomeState extends State<Home> {
                     right: themeProvider.dark ? null : 4,
                     child: Icon(
                       themeProvider.dark ? Icons.nights_stay : Icons.wb_sunny,
-                      color: themeProvider.dark ? Colors.yellow : Colors.orange,
+                      color:
+                          themeProvider.dark ? Colors.white : Color(0xff4B5EFC),
                     ),
                   ),
                 ],
@@ -66,12 +99,33 @@ class _HomeState extends State<Home> {
                 width: MediaQuery.sizeOf(context).width,
                 height: MediaQuery.sizeOf(context).height / 4,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+                  crossAxisAlignment: CrossAxisAlignment.end,  // Align text to the right
                   children: [
-                    Text("1258.2", style: GoogleFonts.assistant(textStyle: TextStyle(fontSize: 40, color: Colors.grey))),
-                    Text("$text", style: GoogleFonts.assistant(textStyle: TextStyle(fontSize: 100, color: themeProvider.dark ? Colors.white : Colors.black)))
-
+                    Text(
+                      "$text2",
+                      style: GoogleFonts.assistant(
+                        textStyle: TextStyle(fontSize: 40, color: Colors.grey),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        child: Align(
+                          alignment: Alignment.centerRight, // Keep text aligned to the right
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown, // Scale down text to fit without changing position
+                            child: Text(
+                              "$text",
+                              style: GoogleFonts.assistant(
+                                textStyle: TextStyle(fontSize: size, color: colorText),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -95,9 +149,7 @@ class _HomeState extends State<Home> {
                                 : CustomColors.mainButtonsLight,
                           ),
                           GestureDetector(
-                            onTap: (){
-
-                            },
+                            onTap: () {},
                             child: Container(
                               width: 80,
                               height: 80,
@@ -105,22 +157,31 @@ class _HomeState extends State<Home> {
                                   color: themeProvider.dark
                                       ? CustomColors.mainButtonsDark
                                       : CustomColors.mainButtonsLight,
-                                  borderRadius: BorderRadius.circular(25)
-                              ),
-                              child: Center(child: Image.asset("assets/img.png", width: 35, height: 35,)),
-
+                                  borderRadius: BorderRadius.circular(25)),
+                              child: Center(
+                                  child: Image.asset(
+                                themeProvider.dark
+                                    ? "assets/img.png"
+                                    : "assets/img_2.png",
+                                width: 35,
+                                height: 35,
+                              )),
                             ),
                           ),
                           Button(
                             value: '%',
-                            onClicked: () {},
+                            onClicked: () {
+                              write("%");
+                            },
                             color: themeProvider.dark
                                 ? CustomColors.mainButtonsDark
                                 : CustomColors.mainButtonsLight,
                           ),
                           Button(
                             value: '÷',
-                            onClicked: () {},
+                            onClicked: () {
+                              write("÷");
+                            },
                             color: Color(0xff4B5EFC),
                           ),
                         ],
@@ -135,7 +196,7 @@ class _HomeState extends State<Home> {
                             value: '7',
                             onClicked: () {
                               setState(() {
-                                text += "7";
+                                write("7");
                               });
                             },
                             color: themeProvider.dark
@@ -146,7 +207,7 @@ class _HomeState extends State<Home> {
                             value: '8',
                             onClicked: () {
                               setState(() {
-                                text += "8";
+                                write("8");
                               });
                             },
                             color: themeProvider.dark
@@ -157,7 +218,7 @@ class _HomeState extends State<Home> {
                             value: '9',
                             onClicked: () {
                               setState(() {
-                                text += "9";
+                                write("9");
                               });
                             },
                             color: themeProvider.dark
@@ -168,7 +229,7 @@ class _HomeState extends State<Home> {
                             value: '×',
                             onClicked: () {
                               setState(() {
-                                text += "×";
+                                write("×");
                               });
                             },
                             color: Color(0xff4B5EFC),
@@ -185,7 +246,7 @@ class _HomeState extends State<Home> {
                             value: '4',
                             onClicked: () {
                               setState(() {
-                                text += "4";
+                                write("4");
                               });
                             },
                             color: themeProvider.dark
@@ -196,7 +257,7 @@ class _HomeState extends State<Home> {
                             value: '5',
                             onClicked: () {
                               setState(() {
-                                text += "5";
+                                write("5");
                               });
                             },
                             color: themeProvider.dark
@@ -207,7 +268,7 @@ class _HomeState extends State<Home> {
                             value: '6',
                             onClicked: () {
                               setState(() {
-                                text += "6";
+                                write("6");
                               });
                             },
                             color: themeProvider.dark
@@ -218,7 +279,7 @@ class _HomeState extends State<Home> {
                             value: '–',
                             onClicked: () {
                               setState(() {
-                                text += "–";
+                                write("–");
                               });
                             },
                             color: Color(0xff4B5EFC),
@@ -235,7 +296,7 @@ class _HomeState extends State<Home> {
                             value: '1',
                             onClicked: () {
                               setState(() {
-                                text += "1";
+                                write("1");
                               });
                             },
                             color: themeProvider.dark
@@ -246,7 +307,7 @@ class _HomeState extends State<Home> {
                             value: '2',
                             onClicked: () {
                               setState(() {
-                                text += "2";
+                                write("2");
                               });
                             },
                             color: themeProvider.dark
@@ -257,7 +318,7 @@ class _HomeState extends State<Home> {
                             value: '3',
                             onClicked: () {
                               setState(() {
-                                text += "3";
+                                write("3");
                               });
                             },
                             color: themeProvider.dark
@@ -268,7 +329,7 @@ class _HomeState extends State<Home> {
                             value: '+',
                             onClicked: () {
                               setState(() {
-                                text += "+";
+                                write("+");
                               });
                             },
                             color: Color(0xff4B5EFC),
@@ -285,7 +346,7 @@ class _HomeState extends State<Home> {
                             value: '.',
                             onClicked: () {
                               setState(() {
-                                text += ".";
+                                write(".");
                               });
                             },
                             color: themeProvider.dark
@@ -296,7 +357,7 @@ class _HomeState extends State<Home> {
                             value: '0',
                             onClicked: () {
                               setState(() {
-                                text += "0";
+                                write("0");
                               });
                             },
                             color: themeProvider.dark
@@ -304,11 +365,10 @@ class _HomeState extends State<Home> {
                                 : CustomColors.numbersLight,
                           ),
                           GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               setState(() {
                                 text = text.substring(0, text.length - 1);
                               });
-
                             },
                             child: Container(
                               width: 80,
@@ -317,17 +377,22 @@ class _HomeState extends State<Home> {
                                   color: themeProvider.dark
                                       ? CustomColors.numbersDark
                                       : CustomColors.numbersLight,
-                                  borderRadius: BorderRadius.circular(25)
-                              ),
-                              child: Center(child: Image.asset("assets/img_1.png", width: 40, height: 40,)),
-
+                                  borderRadius: BorderRadius.circular(25)),
+                              child: Center(
+                                  child: Image.asset(
+                                themeProvider.dark
+                                    ? "assets/img_1.png"
+                                    : "assets/img_3.png",
+                                width: 40,
+                                height: 40,
+                              )),
                             ),
                           ),
                           Button(
                             value: '=',
                             onClicked: () {
                               setState(() {
-                                text += "=";
+                                calculate(text);
                               });
                             },
                             color: Color(0xff4B5EFC),
