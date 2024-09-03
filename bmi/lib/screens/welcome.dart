@@ -26,7 +26,7 @@ class Welcome extends StatelessWidget { // Capitalized class name
               ),
             ),
             Image.asset(
-              "lib/assets/img.png", // Ensure this path is correct
+              "lib/assets/img.png", 
               width: 300,
               height: 300,
             ),
