@@ -1,9 +1,12 @@
 import 'package:calculator/providers/themeProvider.dart';
+import 'package:calculator/utilities/postfix.dart';
 import 'package:calculator/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../myColors/colors.dart';
+import 'package:intl/intl.dart';
+
+import '../utilities/colors.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,29 +16,46 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String text = "";
-  double size = 90;
+  String text = "0";
+  double size = 80;
   String text2 = "";
-  String Operations = "";
+  String res = "";
+  Evaluate b = Evaluate();
   final ScrollController _scrollController = ScrollController();
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-  void write(symbol) {
+
+  void write(String symbol) {
     setState(() {
-      text += symbol;
+      if (symbol == "×" ||
+          symbol == "÷" ||
+          symbol == "+" ||
+          symbol == "–" ||
+          symbol == "%") {
+        res += " $symbol ";
+      } else {
+        res += symbol;
+      }
+      if (text == "0") {
+        text = "";
+        text += symbol;
+      } else {
+        text += symbol;
+      }
 
       int length = text.length;
 
       if (length > 7) {
-        size = 80;
+        size = 70;
       } else if (length > 10) {
-        size = 60;
-      } else if (length > 14) {
         size = 50;
+      } else if (length > 14) {
+        size = 40;
       } else {
-        size = 100;
+        size = 80;
       }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -43,10 +63,30 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void calculate(text) {
+  void calculate(String t) {
+    String result = b.result(t.split(" "));
+    double number = double.parse(result);
 
+    // Create a NumberFormat instance with the desired settings
+    var formatter = NumberFormat()
+      ..maximumFractionDigits = 4
+      ..minimumFractionDigits = 0;
+
+    // Format the number
+    String formattedResult;
+    if (number.abs() >= 1e+6 || number.abs() < 1e-4) {
+      // Use scientific notation for very large or very small numbers
+      formattedResult = number.toStringAsExponential(4);
+    } else {
+      // Use regular notation with up to 4 decimal places
+      formattedResult = formatter.format(number);
+    }
+
+    text2 = text;
+    text = formattedResult;
   }
 
+  @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     Color colorText = themeProvider.dark ? Colors.white : Colors.black;
@@ -60,10 +100,10 @@ class _HomeState extends State<Home> {
                 ? CustomColors.scaffoldDark
                 : CustomColors.scaffoldLight),
         child: Padding(
-          padding: const EdgeInsets.all(22.0),
+          padding: const EdgeInsets.all(28.0),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Stack(
@@ -74,7 +114,7 @@ class _HomeState extends State<Home> {
                   Transform.scale(
                     scale: 1.2,
                     child: Switch(
-                      activeColor: Color(0xff4B5EFC),
+                      activeColor: const Color(0xff4B5EFC),
                       value: themeProvider.dark,
                       onChanged: (_) {
                         themeProvider.toggleTheme();
@@ -86,26 +126,33 @@ class _HomeState extends State<Home> {
                     right: themeProvider.dark ? null : 4,
                     child: Icon(
                       themeProvider.dark ? Icons.nights_stay : Icons.wb_sunny,
-                      color:
-                          themeProvider.dark ? Colors.white : Color(0xff4B5EFC),
+                      color: themeProvider.dark
+                          ? Colors.white
+                          : const Color(0xff4B5EFC),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.sizeOf(context).width,
                 height: MediaQuery.sizeOf(context).height / 4,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-                  crossAxisAlignment: CrossAxisAlignment.end,  // Align text to the right
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // Center vertically
+                  crossAxisAlignment:
+                      CrossAxisAlignment.end, // Align text to the right
                   children: [
-                    Text(
-                      "$text2",
-                      style: GoogleFonts.assistant(
-                        textStyle: TextStyle(fontSize: 40, color: Colors.grey),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        text2,
+                        style: GoogleFonts.assistant(
+                          textStyle:
+                              const TextStyle(fontSize: 40, color: Colors.grey),
+                        ),
                       ),
                     ),
                     SingleChildScrollView(
@@ -113,14 +160,13 @@ class _HomeState extends State<Home> {
                       scrollDirection: Axis.horizontal,
                       child: SizedBox(
                         child: Align(
-                          alignment: Alignment.centerRight, // Keep text aligned to the right
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown, // Scale down text to fit without changing position
-                            child: Text(
-                              "$text",
-                              style: GoogleFonts.assistant(
-                                textStyle: TextStyle(fontSize: size, color: colorText),
-                              ),
+                          alignment: Alignment
+                              .centerRight, // Keep text aligned to the right
+                          child: Text(
+                            text,
+                            style: GoogleFonts.assistant(
+                              textStyle:
+                                  TextStyle(fontSize: size, color: colorText),
                             ),
                           ),
                         ),
@@ -131,276 +177,418 @@ class _HomeState extends State<Home> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Button(
-                            value: 'C',
-                            onClicked: () {
-                              setState(() {
-                                text = " ";
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.mainButtonsDark
-                                : CustomColors.mainButtonsLight,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Button(
+                          value: 'C',
+                          onClicked: () {
+                            setState(() {
+                              res = "";
+                              text = "0";
+                              text2 = "";
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.mainButtonsDark
+                              : CustomColors.mainButtonsLight,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            List<String> splitted = res.split(" ");
+                            if( splitted[splitted.length - 1][0] != "-" ){
+                              splitted[splitted.length - 1] = "-${splitted[splitted.length - 1]}"; // [98, *, -6]
+                            }
+                            else{
+                              splitted[splitted.length - 1] = splitted[splitted.length - 1].substring(1);}
+                            res = splitted.join(" ");
+                            setState(() {
+                              if(text2.isEmpty) {
+                                text = res.replaceAll(" ", "");
+                              }
+                            });
+
+                          },
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: themeProvider.dark
+                                    ? CustomColors.mainButtonsDark
+                                    : CustomColors.mainButtonsLight,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Center(
+                                child: Image.asset(
+                              themeProvider.dark
+                                  ? "assets/img.png"
+                                  : "assets/img_2.png",
+                              width: 35,
+                              height: 35,
+                            )),
                           ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  color: themeProvider.dark
-                                      ? CustomColors.mainButtonsDark
-                                      : CustomColors.mainButtonsLight,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: Center(
-                                  child: Image.asset(
-                                themeProvider.dark
-                                    ? "assets/img.png"
-                                    : "assets/img_2.png",
-                                width: 35,
-                                height: 35,
-                              )),
-                            ),
-                          ),
-                          Button(
-                            value: '%',
-                            onClicked: () {
+                        ),
+                        Button(
+                          value: '%',
+                          onClicked: () {
+                            if(text[text.length - 1] != "×" &&
+                                text[text.length - 1] != "÷" &&
+                                text[text.length - 1] != "+" &&
+                                text[text.length - 1] != "–" &&
+                                text[text.length - 1] != "%") {
                               write("%");
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.mainButtonsDark
-                                : CustomColors.mainButtonsLight,
-                          ),
-                          Button(
-                            value: '÷',
-                            onClicked: () {
+                            }
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.mainButtonsDark
+                              : CustomColors.mainButtonsLight,
+                        ),
+                        Button(
+                          value: '÷',
+                          onClicked: () {
+                            if(text[text.length - 1] != "×" &&
+                                text[text.length - 1] != "÷" &&
+                                text[text.length - 1] != "+" &&
+                                text[text.length - 1] != "–" &&
+                                text[text.length - 1] != "%") {
                               write("÷");
-                            },
-                            color: Color(0xff4B5EFC),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Button(
-                            value: '7',
-                            onClicked: () {
-                              setState(() {
-                                write("7");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '8',
-                            onClicked: () {
-                              setState(() {
-                                write("8");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '9',
-                            onClicked: () {
-                              setState(() {
-                                write("9");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '×',
-                            onClicked: () {
-                              setState(() {
+                            }
+                          },
+                          color: const Color(0xff4B5EFC),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Button(
+                          value: '7',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("7");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '8',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("8");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '9',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("9");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '×',
+                          onClicked: () {
+                            setState(() {
+                              if(text[text.length - 1] != "×" &&
+                                  text[text.length - 1] != "÷" &&
+                                  text[text.length - 1] != "+" &&
+                                  text[text.length - 1] != "–" &&
+                                  text[text.length - 1] != "%") {
                                 write("×");
-                              });
-                            },
-                            color: Color(0xff4B5EFC),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Button(
-                            value: '4',
-                            onClicked: () {
-                              setState(() {
-                                write("4");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '5',
-                            onClicked: () {
-                              setState(() {
-                                write("5");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '6',
-                            onClicked: () {
-                              setState(() {
-                                write("6");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '–',
-                            onClicked: () {
-                              setState(() {
+                              }
+                            });
+                          },
+                          color: const Color(0xff4B5EFC),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Button(
+                          value: '4',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("4");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '5',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("5");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '6',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("6");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '–',
+                          onClicked: () {
+                            setState(() {
+                              if(text[text.length - 1] != "×" &&
+                                  text[text.length - 1] != "÷" &&
+                                  text[text.length - 1] != "+" &&
+                                  text[text.length - 1] != "–" &&
+                                  text[text.length - 1] != "%") {
                                 write("–");
-                              });
-                            },
-                            color: Color(0xff4B5EFC),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Button(
-                            value: '1',
-                            onClicked: () {
-                              setState(() {
-                                write("1");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '2',
-                            onClicked: () {
-                              setState(() {
-                                write("2");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '3',
-                            onClicked: () {
-                              setState(() {
-                                write("3");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          Button(
-                            value: '+',
-                            onClicked: () {
-                              setState(() {
+                              }
+                            });
+                          },
+                          color: const Color(0xff4B5EFC),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Button(
+                          value: '1',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("1");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '2',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("2");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '3',
+                          onClicked: () {
+                            setState(() {
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                res = "";
+                                text = "";
+                                text2 = "";
+                              }
+                              write("3");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '+',
+                          onClicked: () {
+                            setState(() {
+                              if(text[text.length - 1] != "×" &&
+                                  text[text.length - 1] != "÷" &&
+                                  text[text.length - 1] != "+" &&
+                                  text[text.length - 1] != "–" &&
+                                  text[text.length - 1] != "%") {
                                 write("+");
-                              });
-                            },
-                            color: Color(0xff4B5EFC),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Button(
-                            value: '.',
-                            onClicked: () {
-                              setState(() {
+                              }
+                            });
+                          },
+                          color: const Color(0xff4B5EFC),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Button(
+                          value: '.',
+                          onClicked: () {
+                            setState(() {
+                              if(text[text.length - 1] != "×" &&
+                                  text[text.length - 1] != "÷" &&
+                                  text[text.length - 1] != "+" &&
+                                  text[text.length - 1] != "–" &&
+                                  text[text.length - 1] != "%"&&
+                                  text[text.length - 1] != "."
+                              ) {
                                 write(".");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
+                              }
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        Button(
+                          value: '0',
+                          onClicked: () {
+                            setState(() {
+                              write("0");
+                            });
+                          },
+                          color: themeProvider.dark
+                              ? CustomColors.numbersDark
+                              : CustomColors.numbersLight,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              text = text.substring(0, text.length - 1);
+                            });
+                          },
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: themeProvider.dark
+                                    ? CustomColors.numbersDark
+                                    : CustomColors.numbersLight,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Center(
+                                child: Image.asset(
+                              themeProvider.dark
+                                  ? "assets/img_1.png"
+                                  : "assets/img_3.png",
+                              width: 40,
+                              height: 40,
+                            )),
                           ),
-                          Button(
-                            value: '0',
-                            onClicked: () {
-                              setState(() {
-                                write("0");
-                              });
-                            },
-                            color: themeProvider.dark
-                                ? CustomColors.numbersDark
-                                : CustomColors.numbersLight,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                text = text.substring(0, text.length - 1);
-                              });
-                            },
-                            child: Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                  color: themeProvider.dark
-                                      ? CustomColors.numbersDark
-                                      : CustomColors.numbersLight,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: Center(
-                                  child: Image.asset(
-                                themeProvider.dark
-                                    ? "assets/img_1.png"
-                                    : "assets/img_3.png",
-                                width: 40,
-                                height: 40,
-                              )),
-                            ),
-                          ),
-                          Button(
-                            value: '=',
-                            onClicked: () {
-                              setState(() {
-                                calculate(text);
-                              });
-                            },
-                            color: Color(0xff4B5EFC),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                        Button(
+                          value: '=',
+                          onClicked: () {
+                            setState(() {
+                              calculate(res);
+                            });
+                          },
+                          color: const Color(0xff4B5EFC),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               )
             ],
@@ -409,4 +597,5 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
 }

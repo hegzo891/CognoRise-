@@ -1,6 +1,3 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +21,7 @@ class _ButtonState extends State<Button> {
 
     final themeProvider = Provider.of<ThemeProvider>(context);
     Color colorText = themeProvider.dark ? Colors.white : Colors.black;
-    Color? Detect(value){
+    Color? detect(value){
       if(value == "+" || value == "–" || value == "×" || value == "÷" || value == "=")
         {
           return Colors.white;
@@ -48,7 +45,7 @@ class _ButtonState extends State<Button> {
             color: widget.color,
             borderRadius: BorderRadius.circular(25)
         ),
-        child: Center(child: Text("${widget.value}", style: TextStyle(color: Detect(widget.value), fontSize: 35),)),
+        child: Center(child: Text(widget.value, style: TextStyle(color: detect(widget.value), fontSize: 35),)),
 
       ),
     );
