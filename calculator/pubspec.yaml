@@ -40,8 +40,15 @@ dependencies:
   provider: ^6.1.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.10.0"
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/calculator
+  .png"
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
