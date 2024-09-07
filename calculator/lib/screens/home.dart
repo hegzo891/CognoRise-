@@ -197,15 +197,15 @@ class _HomeState extends State<Home> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            List<String> splitted = res.split(" ");
-                            if (splitted[splitted.length - 1][0] != "-") {
-                              splitted[splitted.length - 1] =
-                              "-${splitted[splitted.length - 1]}"; // [98, *, -6]
+                            List<String> split = res.split(" ");
+                            if (split[split.length - 1][0] != "-") {
+                              split[split.length - 1] =
+                              "-${split[split.length - 1]}"; // [98, *, -6]
                             } else {
-                              splitted[splitted.length - 1] =
-                                  splitted[splitted.length - 1].substring(1);
+                              split[split.length - 1] =
+                                  split[split.length - 1].substring(1);
                             }
-                            res = splitted.join(" ");
+                            res = split.join(" ");
                             setState(() {
                               if (text2.isEmpty) {
                                 text = res.replaceAll(" ", "");
