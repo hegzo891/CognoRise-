@@ -141,9 +141,9 @@ class _HomeState extends State<Home> {
                 height: MediaQuery.sizeOf(context).height / 4,
                 child: Column(
                   mainAxisAlignment:
-                      MainAxisAlignment.center, // Center vertically
+                  MainAxisAlignment.center, // Center vertically
                   crossAxisAlignment:
-                      CrossAxisAlignment.end, // Align text to the right
+                  CrossAxisAlignment.end, // Align text to the right
                   children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -151,7 +151,7 @@ class _HomeState extends State<Home> {
                         text2,
                         style: GoogleFonts.assistant(
                           textStyle:
-                              const TextStyle(fontSize: 40, color: Colors.grey),
+                          const TextStyle(fontSize: 40, color: Colors.grey),
                         ),
                       ),
                     ),
@@ -166,7 +166,7 @@ class _HomeState extends State<Home> {
                             text,
                             style: GoogleFonts.assistant(
                               textStyle:
-                                  TextStyle(fontSize: size, color: colorText),
+                              TextStyle(fontSize: size, color: colorText),
                             ),
                           ),
                         ),
@@ -198,18 +198,19 @@ class _HomeState extends State<Home> {
                         GestureDetector(
                           onTap: () {
                             List<String> splitted = res.split(" ");
-                            if( splitted[splitted.length - 1][0] != "-" ){
-                              splitted[splitted.length - 1] = "-${splitted[splitted.length - 1]}"; // [98, *, -6]
+                            if (splitted[splitted.length - 1][0] != "-") {
+                              splitted[splitted.length - 1] =
+                              "-${splitted[splitted.length - 1]}"; // [98, *, -6]
+                            } else {
+                              splitted[splitted.length - 1] =
+                                  splitted[splitted.length - 1].substring(1);
                             }
-                            else{
-                              splitted[splitted.length - 1] = splitted[splitted.length - 1].substring(1);}
                             res = splitted.join(" ");
                             setState(() {
-                              if(text2.isEmpty) {
+                              if (text2.isEmpty) {
                                 text = res.replaceAll(" ", "");
                               }
                             });
-
                           },
                           child: Container(
                             width: 80,
@@ -221,18 +222,18 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(25)),
                             child: Center(
                                 child: Image.asset(
-                              themeProvider.dark
-                                  ? "assets/img.png"
-                                  : "assets/img_2.png",
-                              width: 35,
-                              height: 35,
-                            )),
+                                  themeProvider.dark
+                                      ? "assets/img.png"
+                                      : "assets/img_2.png",
+                                  width: 35,
+                                  height: 35,
+                                )),
                           ),
                         ),
                         Button(
                           value: '%',
                           onClicked: () {
-                            if(text[text.length - 1] != "×" &&
+                            if (text[text.length - 1] != "×" &&
                                 text[text.length - 1] != "÷" &&
                                 text[text.length - 1] != "+" &&
                                 text[text.length - 1] != "–" &&
@@ -247,7 +248,7 @@ class _HomeState extends State<Home> {
                         Button(
                           value: '÷',
                           onClicked: () {
-                            if(text[text.length - 1] != "×" &&
+                            if (text[text.length - 1] != "×" &&
                                 text[text.length - 1] != "÷" &&
                                 text[text.length - 1] != "+" &&
                                 text[text.length - 1] != "–" &&
@@ -332,7 +333,7 @@ class _HomeState extends State<Home> {
                           value: '×',
                           onClicked: () {
                             setState(() {
-                              if(text[text.length - 1] != "×" &&
+                              if (text[text.length - 1] != "×" &&
                                   text[text.length - 1] != "÷" &&
                                   text[text.length - 1] != "+" &&
                                   text[text.length - 1] != "–" &&
@@ -418,7 +419,7 @@ class _HomeState extends State<Home> {
                           value: '–',
                           onClicked: () {
                             setState(() {
-                              if(text[text.length - 1] != "×" &&
+                              if (text[text.length - 1] != "×" &&
                                   text[text.length - 1] != "÷" &&
                                   text[text.length - 1] != "+" &&
                                   text[text.length - 1] != "–" &&
@@ -504,7 +505,7 @@ class _HomeState extends State<Home> {
                           value: '+',
                           onClicked: () {
                             setState(() {
-                              if(text[text.length - 1] != "×" &&
+                              if (text[text.length - 1] != "×" &&
                                   text[text.length - 1] != "÷" &&
                                   text[text.length - 1] != "+" &&
                                   text[text.length - 1] != "–" &&
@@ -527,13 +528,18 @@ class _HomeState extends State<Home> {
                           value: '.',
                           onClicked: () {
                             setState(() {
-                              if(text[text.length - 1] != "×" &&
+                              // Split the text by operators to get the last number segment
+                              List<String> segments = text.split(RegExp(r'[×÷+–%]'));
+                              String lastSegment = segments.last;
+
+                              // Only allow adding a decimal point if the last number segment doesn't already contain one
+                              if (!lastSegment.contains(".") &&
+                                  text[text.length - 1] != "×" &&
                                   text[text.length - 1] != "÷" &&
                                   text[text.length - 1] != "+" &&
                                   text[text.length - 1] != "–" &&
-                                  text[text.length - 1] != "%"&&
-                                  text[text.length - 1] != "."
-                              ) {
+                                  text[text.length - 1] != "%" &&
+                                  text[text.length - 1] != ".") {
                                 write(".");
                               }
                             });
@@ -569,12 +575,12 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(25)),
                             child: Center(
                                 child: Image.asset(
-                              themeProvider.dark
-                                  ? "assets/img_1.png"
-                                  : "assets/img_3.png",
-                              width: 40,
-                              height: 40,
-                            )),
+                                  themeProvider.dark
+                                      ? "assets/img_1.png"
+                                      : "assets/img_3.png",
+                                  width: 40,
+                                  height: 40,
+                                )),
                           ),
                         ),
                         Button(
@@ -597,5 +603,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 }

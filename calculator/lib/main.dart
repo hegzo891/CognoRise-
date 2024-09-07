@@ -1,10 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';  // Import this for orientation lock
+import 'package:provider/provider.dart';
 import 'package:calculator/providers/themeProvider.dart';
 import 'package:calculator/screens/home.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'dart:ffi';
 
-void main(){
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(MyApp());
 }
 
@@ -17,7 +24,7 @@ class MyApp extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (context) => ThemeProvider(),)],
       child: MaterialApp(
         theme: ThemeData(
-          useMaterial3: true
+          useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
         home: Home(),
