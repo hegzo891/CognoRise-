@@ -272,18 +272,27 @@ class _HomeState extends State<Home> {
                           value: '7',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator1 = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator1){
+                                  write("7");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("7");
+                                }
+                              } else {
+                                write("7");
                               }
-                              write("7");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -293,17 +302,25 @@ class _HomeState extends State<Home> {
                           value: '8',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                write("8");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("8");
+                                }
+                              } else {
+                                write("8");
                               }
-                              write("8");
                             });
                           },
                           color: themeProvider.dark
@@ -314,18 +331,27 @@ class _HomeState extends State<Home> {
                           value: '9',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("9");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("9");
+                                }
+                              } else {
+                                write("9");
                               }
-                              write("9");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -358,18 +384,27 @@ class _HomeState extends State<Home> {
                           value: '4',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("4");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("4");
+                                }
+                              } else {
+                                write("4");
                               }
-                              write("4");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -379,18 +414,27 @@ class _HomeState extends State<Home> {
                           value: '5',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("5");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("5");
+                                }
+                              } else {
+                                write("5");
                               }
-                              write("5");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -400,18 +444,27 @@ class _HomeState extends State<Home> {
                           value: '6',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("6");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("6");
+                                }
+                              } else {
+                                write("6");
                               }
-                              write("6");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -444,18 +497,27 @@ class _HomeState extends State<Home> {
                           value: '1',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("1");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("1");
+                                }
+                              } else {
+                                write("1");
                               }
-                              write("1");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -465,18 +527,27 @@ class _HomeState extends State<Home> {
                           value: '2',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("2");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("2");
+                                }
+                              } else {
+                                write("2");
                               }
-                              write("2");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -486,18 +557,27 @@ class _HomeState extends State<Home> {
                           value: '3',
                           onClicked: () {
                             setState(() {
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
                               if (text2.isNotEmpty &&
                                   (text[text.length - 1] != "×" &&
                                       text[text.length - 1] != "÷" &&
                                       text[text.length - 1] != "+" &&
                                       text[text.length - 1] != "–" &&
                                       text[text.length - 1] != "%")) {
-                                res = "";
-                                text = "";
-                                text2 = "";
+                                if(containsOperator){
+                                  write("3");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("3");
+                                }
+                              } else {
+                                write("3");
                               }
-                              write("3");
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
@@ -554,8 +634,27 @@ class _HomeState extends State<Home> {
                           value: '0',
                           onClicked: () {
                             setState(() {
-                              write("0");
+                              List<String> operators = ["×", "÷", "+", "–", "%"];
+                              bool containsOperator = operators.any((operator) => text.indexOf(operator) != -1);
+                              if (text2.isNotEmpty &&
+                                  (text[text.length - 1] != "×" &&
+                                      text[text.length - 1] != "÷" &&
+                                      text[text.length - 1] != "+" &&
+                                      text[text.length - 1] != "–" &&
+                                      text[text.length - 1] != "%")) {
+                                if(containsOperator){
+                                  write("0");}
+                                else{
+                                  text = "";
+                                  text2  = "";
+                                  res = "";
+                                  write("0");
+                                }
+                              } else {
+                                write("0");
+                              }
                             });
+
                           },
                           color: themeProvider.dark
                               ? CustomColors.numbersDark
