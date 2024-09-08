@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
 import '../utilities/colors.dart';
 
 class Home extends StatefulWidget {
@@ -49,11 +48,11 @@ class _HomeState extends State<Home> {
       int length = text.length;
 
       if (length > 7) {
-        size = 70;
+        size = 60;
       } else if (length > 10) {
-        size = 50;
-      } else if (length > 14) {
         size = 40;
+      } else if (length > 14) {
+        size = 30;
       } else {
         size = 80;
       }
@@ -88,6 +87,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    if(text == ""){
+      text = "0";
+    }
     final themeProvider = Provider.of<ThemeProvider>(context);
     Color colorText = themeProvider.dark ? Colors.white : Colors.black;
 
@@ -561,8 +563,8 @@ class _HomeState extends State<Home> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              text = text.substring(0, text.length - 1);
+                            setState(() {if(text != "0"){
+                              text = text.substring(0, text.length - 1);}
                             });
                           },
                           child: Container(
