@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ThemeProvider extends ChangeNotifier{
-  bool dark = true;
+  bool dark = false;
 
   void toggleTheme(){
     dark = !dark;

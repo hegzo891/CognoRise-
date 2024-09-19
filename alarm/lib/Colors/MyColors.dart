@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyColors {
   static const scaffoldlight = LinearGradient(
-      colors: [Color(0xffEEF0F5), Color(0xffE2E4EA)],
+      colors: [Color(0xffedeef2), Color(0xffe9ebee)],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter);
 
